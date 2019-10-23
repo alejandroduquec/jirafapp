@@ -1,0 +1,7 @@
+# PostgreSQL
+# ------------------------------------------------------------------------------
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=jirafapp
+POSTGRES_USER=yDgsmKkCWsHjGaPLNMCEJVvMaDTaxsDj
+POSTGRES_PASSWORD=qVO4UhLVZLV8XjdDBfJcTC0IKZkWGF335p8mKFa8jdOBrMroZXfqfRDphLng4ox7
