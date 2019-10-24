@@ -73,7 +73,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    #"jirafapp.users.apps.UsersConfig",
+    "jirafapp.users.apps.UsersAppConfig",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -92,7 +92,7 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
-#AUTH_USER_MODEL = "users.User"
+AUTH_USER_MODEL = "users.User"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
 LOGIN_REDIRECT_URL = "/"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
@@ -109,14 +109,14 @@ PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-password-validators
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
-    },
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
-]
+# AUTH_PASSWORD_VALIDATORS = [
+#     {
+#         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
+#     },
+#     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+#     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+#     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+# ]
 
 # MIDDLEWARE
 # ------------------------------------------------------------------------------
@@ -283,5 +283,14 @@ ACCOUNT_ADAPTER = "jirafapp.users.adapters.AccountAdapter"
 SOCIALACCOUNT_ADAPTER = "jirafapp.users.adapters.SocialAccountAdapter"
 
 
-# Your stuff...
-# ------------------------------------------------------------------------------
+# Rest Framework
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 50
+}

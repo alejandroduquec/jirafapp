@@ -1,0 +1,99 @@
+[
+    {
+        "model": "users.province",
+        "pk": 1,
+        "fields": {
+            "slug_name": "caba",
+            "name": "Ciudad de Buenos Aires"
+            
+        }
+    },
+    {
+        "model": "users.province",
+        "pk": 2,
+        "fields": {
+            "slug_name": "buenos_aires",
+            "name": "Buenos Aires"
+        }
+    },
+    {
+        "model": "users.province",
+        "pk": 3,
+        "fields": {
+            "slug_name": "catamarca",
+            "name": "Catamarca"
+        }
+    },
+    {
+        "model": "users.province",
+        "pk": 4,
+        "fields": {
+            "slug_name": "chaco",
+            "name": "Chaco"
+        }
+    },
+    {
+        "model": "users.province",
+        "pk": 5,
+        "fields": {
+            "slug_name": "cordoba",
+            "name": "Cordoba"
+        }
+    },
+    {
+        "model": "users.province",
+        "pk": 6,
+        "fields": {
+            "slug_name": "corrientes",
+            "name": "Corrientes"
+        }
+    },
+    {
+        "model": "users.province",
+        "pk": 7,
+        "fields": {
+            "slug_name": "entre_rios",
+            "name": "Entre Rios"
+        }
+    },
+    {
+        "model": "users.province",
+        "pk": 8,
+        "fields": {
+            "slug_name": "formosa",
+            "name": "Formosa"
+        }
+    },
+    {
+        "model": "users.province",
+        "pk": 9,
+        "fields": {
+            "slug_name": "jujuy",
+            "name": "Jujuy"
+        }
+    },
+    {
+        "model": "users.province",
+        "pk": 10,
+        "fields": {
+            "slug_name": "la_pampa",
+            "name": "La Pampa"
+        }
+    },
+    {
+        "model": "users.province",
+        "pk": 11,
+        "fields": {
+            "slug_name": "la_rioja",
+            "name": "La Rioja"
+        }
+    },
+    {
+        "model": "users.province",
+        "pk": 12,
+        "fields": {
+            "slug_name": "mendoza",
+            "name": "Mendoza"
+        }
+    }
+]

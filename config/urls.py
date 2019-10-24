@@ -1,3 +1,6 @@
+"""Jirafapp Urls."""
+
+# Django
 from django.conf import settings
 from django.urls import include, path
 from django.conf.urls.static import static
@@ -8,7 +11,8 @@ from django.views import defaults as default_views
 urlpatterns = [
 
     path(settings.ADMIN_URL, admin.site.urls),
-
+    # Local app
+    path('', include(('jirafapp.users.urls', 'users'), namespace='users')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
