@@ -11,6 +11,7 @@ from .views import users as user_views
 
 router = DefaultRouter()
 router.register(r'provinces', user_views.ProvinceViewSet, basename='provinces')
+router.register(r'users', user_views.UserViewSet, basename='users')
 
 urlpatterns = [
     path('', include(router.urls))
