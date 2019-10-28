@@ -8,12 +8,17 @@ from rest_framework.authtoken.models import Token
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework.authtoken.models import Token
+from django.conf import settings
 
 # Model
 from jirafapp.users.models import (
     Province,
     User
 )
+
+# Utils
+from jirafapp.utils.utilities import send_email
+from cryptography.fernet import Fernet
 
 
 class ProvinceModelSerializer(serializers.ModelSerializer):
@@ -53,35 +58,11 @@ class UserLoginSerializer(serializers.Serializer):
     """
 
     email = serializers.EmailField()
-    password = serializers.CharField(min_length=3)
+    code = serializers.CharField(min_length=3)
 
     def validate(self, data):
         """Check credentials."""
-        user = authenticate(username=data['email'], password=data['password'])
-        if not user:
-            raise serializers.ValidationError('Invalid credential')
-        self.context['user'] = user
-        return data
-
-    def create(self, data):
-        """Generate or retrieve new token."""
-        # Token is one to one field with user
-        token, created = Token.objects.get_or_create(user=self.context.get('user'))
-        return self.context['user'], token.key
-
-
-class UserLoginSerializer(serializers.Serializer):
-    """Users login Serializer.
-
-    Handle login request data.
-    """
-
-    email = serializers.EmailField()
-    password = serializers.CharField(min_length=3)
-
-    def validate(self, data):
-        """Check credentials."""
-        user = authenticate(username=data['email'], password=data['password'])
+        user = authenticate(username=data['email'], password=data['code'])
         if not user:
             raise serializers.ValidationError('Invalid credential')
         self.context['user'] = user
@@ -105,7 +86,7 @@ class UserSignUpSerializer(serializers.Serializer):
     )
 
     # Password
-    password = serializers.CharField(max_length=14, min_length=3)
+    code = serializers.CharField(max_length=14, min_length=3)
 
     # Name
     first_name = serializers.CharField(min_length=1)
@@ -132,6 +113,13 @@ class UserSignUpSerializer(serializers.Serializer):
         # create username by email
         if 'username' not in data:
             data['username'] = username[0]
+        # User does not needs a password only a public pin
+        code = data.get('code')
+        data['password'] = code
+
+        # Encrypt data
+        f = Fernet(settings.KEY_ENCRYPT)
+        data['code'] = f.encrypt(code.encode()).decode()
         return data
 
     def create(self, data):
@@ -139,3 +127,33 @@ class UserSignUpSerializer(serializers.Serializer):
         user = User.objects.create_user(**data)
         token, created = Token.objects.get_or_create(user=user)
         return user, token.key
+
+
+class ResetCodeSerializer(serializers.Serializer):
+    """Reset code Serializer."""
+
+    email = serializers.EmailField()
+
+    def validate_email(self, data):
+        """Check email credentials."""
+        email = User.objects.filter(email=data)
+        if not email:
+            raise serializers.ValidationError('Este correo electrónico no es válido.')
+        return data
+    
+    def create(self, data):
+        """Handle create method to send reset email."""
+        # Send email
+        user = User.objects.get(email=data['email'])
+        # Decrypt data
+        f = Fernet(settings.KEY_ENCRYPT)
+        bytes_code = f.decrypt(user.code.encode())
+        send_email(user, 'Hi {}. Remember that your code is {}'.format(
+            user.first_name,
+            bytes_code.decode()
+            )
+        )
+        return user
+
+
+

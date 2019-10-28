@@ -44,6 +44,11 @@ class User(JirafaModel, AbstractUser):
             'unique': 'A user with that email already exist',
         }
     )
+    
+    code = models.CharField(
+        'Pin Code',
+        max_length=500,
+    )
 
     province = models.ForeignKey(
         'users.Province',

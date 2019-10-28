@@ -67,6 +67,7 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "django_celery_beat",
     'rest_framework.authtoken',
+    'drf_yasg',
 ]
 
 LOCAL_APPS = [
@@ -290,4 +291,8 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 50
+}
+
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
 }

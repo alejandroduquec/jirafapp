@@ -23,7 +23,8 @@ from jirafapp.users.serializers import (
     ProvinceModelSerializer,
     UserModelSerializer,
     UserLoginSerializer,
-    UserSignUpSerializer
+    UserSignUpSerializer,
+    ResetCodeSerializer
 )
 
 
@@ -54,6 +55,8 @@ class UserViewSet(mixins.RetrieveModelMixin,
             permissions = [AllowAny]
         elif self.action in ['retrieve']:
             permissions = [IsAuthenticated, IsAccountOwner]
+        else:
+            permissions = [AllowAny]
         return [p() for p in permissions]
 
     def get_serializer_class(self):
@@ -62,6 +65,8 @@ class UserViewSet(mixins.RetrieveModelMixin,
             return UserLoginSerializer
         if self.action == 'signup':
             return UserSignUpSerializer
+        if self.action == 'reset_code':
+            return ResetCodeSerializer
         return UserModelSerializer
 
     @action(detail=False, methods=['post'])
@@ -89,3 +94,14 @@ class UserViewSet(mixins.RetrieveModelMixin,
             'access_token': token
         }
         return Response(data, status=status.HTTP_201_CREATED)
+
+    @action(detail=False, methods=['post'])
+    def reset_code(self, request):
+        """Reset code by email."""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        data = {
+            'status': 'Email Sent.',
+        }
+        return Response(data, status=status.HTTP_200_OK)
