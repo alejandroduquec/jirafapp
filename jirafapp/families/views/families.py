@@ -64,10 +64,8 @@ class FamiliesViewSet(mixins.CreateModelMixin,
         return Response(data, status=status.HTTP_201_CREATED)
     
     def list(self, request, *args, **kwargs):
-        """Check permissions.
-        
-        For any reason get_permissions have any issue."""
-        # TODO: resolve this
+        """Get Family members."""
+        # TODO: for any reason has_permissions method have an issue resolve it
         if self.user != request.user:
             data = {"detail": "You do not have permission to perform this action."}
             return Response(data, status=status.HTTP_403_FORBIDDEN)
