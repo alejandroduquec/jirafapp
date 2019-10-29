@@ -129,7 +129,7 @@ class UserSignUpSerializer(serializers.Serializer):
         return user, token.key
 
 
-class ResetCodeSerializer(serializers.Serializer):
+class RememberCodeSerializer(serializers.Serializer):
     """Reset code Serializer."""
 
     email = serializers.EmailField()
@@ -148,12 +148,13 @@ class ResetCodeSerializer(serializers.Serializer):
         # Decrypt data
         f = Fernet(settings.KEY_ENCRYPT)
         bytes_code = f.decrypt(user.code.encode())
-        send_email(user, 'Hi {}. Remember that your code is {}'.format(
-            user.first_name,
-            bytes_code.decode()
-            )
-        )
-        return user
+        # send_email(user, 'Hi {}. Remember that your code is {}'.format(
+        #     user.first_name,
+        #     bytes_code.decode()
+        #     )
+        # )
+
+        return bytes_code.decode()
 
 
 

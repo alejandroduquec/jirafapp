@@ -24,7 +24,7 @@ from jirafapp.users.serializers import (
     UserModelSerializer,
     UserLoginSerializer,
     UserSignUpSerializer,
-    ResetCodeSerializer
+    RememberCodeSerializer
 )
 
 
@@ -65,8 +65,8 @@ class UserViewSet(mixins.RetrieveModelMixin,
             return UserLoginSerializer
         if self.action == 'signup':
             return UserSignUpSerializer
-        if self.action == 'reset_code':
-            return ResetCodeSerializer
+        if self.action == 'remember_code':
+            return RememberCodeSerializer
         return UserModelSerializer
 
     @action(detail=False, methods=['post'])
@@ -96,12 +96,13 @@ class UserViewSet(mixins.RetrieveModelMixin,
         return Response(data, status=status.HTTP_201_CREATED)
 
     @action(detail=False, methods=['post'])
-    def reset_code(self, request):
-        """Reset code by email."""
+    def remember_code(self, request):
+        """Remember code by email."""
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        code = serializer.save()
         data = {
-            'status': 'Email Sent.',
+            'code': code,
+            'response': 'This is a temporal response, it will be an email.'
         }
         return Response(data, status=status.HTTP_200_OK)
