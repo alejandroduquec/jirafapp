@@ -16,7 +16,8 @@ class Province(models.Model):
         max_length=250,
     )
     slug_name = models.SlugField(
-        max_length=40
+        max_length=40,
+        unique=True
     )
 
     class Meta:

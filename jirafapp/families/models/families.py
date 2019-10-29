@@ -3,60 +3,56 @@
 # Django
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from rest_framework.validators import UniqueValidator
 
 # Utils
 from jirafapp.utils.models import JirafaModel
 
-
-class Family(JirafaModel):
-    """Family model."""
-
-    members = models.ManyToManyField('families.kid')
-    owner = models.ForeignKey(
-    'users.User',
-    on_delete=models.CASCADE)
-
-    class Meta:
-        """Meta class."""
-
-        verbose_name = 'Familia'
-        verbose_name_plural = 'Familias'
-
-    def __str__(self):
-        """Return province name."""
-        return self.owner
+GENDER_CHOICES = [
+        ('M', 'M'),
+        ('F', 'F'),
+    ]
 
 
-class kid(JirafaModel):
+class Kid(JirafaModel):
     """Kid model.
-    """
+    
+    A kid is a member of family."""
+
+    parent = models.ForeignKey('users.user', on_delete=models.CASCADE)
 
     gender = models.CharField(
-        'email address',
-        unique=True,
-        error_messages={
-            'unique': 'A user with that email already exist',
-        }
+        'Genero',
+        max_length=2,
+        choices=GENDER_CHOICES,
+    )
+
+    username = models.SlugField(
+        max_length=40,
+        unique=True
     )
     
     name = models.CharField(
-        'Pin Code',
+        'Kid Name',
         max_length=500,
     )
 
     birthdate = models.DateField(
         'Birthdate'
     )
+
+    premature_date = models.DateField(
+        'Premature date estimated',
+        null=True,
+        blank=True
+    )
+
     class Meta:
         """Meta class."""
 
-        verbose_name = 'Usuario'
-        verbose_name_plural = 'Usuarios'
+        verbose_name = 'Niño'
+        verbose_name_plural = 'Niños'
 
     def __str__(self):
-        """Return username."""
-        return self.username
-
-    def get_short_name(self):
-        """Return username."""
-        return self.username
+        """Return name."""
+        return self.name

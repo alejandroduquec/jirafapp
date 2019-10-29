@@ -93,7 +93,7 @@ class UserSignUpSerializer(serializers.Serializer):
 
     # Province
     province = serializers.SlugField(
-        max_length=40
+        max_length=40,
     )
 
     def validate_province(self, data):
