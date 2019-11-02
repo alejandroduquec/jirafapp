@@ -90,7 +90,7 @@ class KidsViewSet(mixins.RetrieveModelMixin,
     
     queryset = Kid.objects.all()
     lookup_field = 'username'
-    permission_classes = [IsParent]
+    permission_classes = [IsAuthenticated, IsParent]
 
     def dispatch(self, request, *args, **kwargs):
         """Verify that the user exist."""
