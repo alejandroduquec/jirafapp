@@ -12,7 +12,7 @@ from .views import families as families_views
 router = DefaultRouter()
 
 router.register(
-    r'users/(?P<username>[a-zA-Z0-9_-]+)/family',
+    r'users/(?P<username>[a-zA-Z0-9_.-]+)/family',
     families_views.FamiliesViewSet,
     basename='families'
 )

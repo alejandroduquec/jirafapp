@@ -56,3 +56,41 @@ class Kid(JirafaModel):
     def __str__(self):
         """Return name."""
         return self.name
+
+
+class KidHeight(JirafaModel):
+    """Kid's heights data model."""
+
+    kid = models.ForeignKey('families.kid', on_delete=models.CASCADE)
+
+    height = models.CharField(
+        'Height',
+        max_length=10,
+    )
+
+    age_height = models.CharField(
+        'Age height',
+        max_length=10,
+    )
+
+    percentile = models.CharField(
+        'Percentile',
+        max_length=10,
+    )
+
+    date_height = models.DateField(
+        'Date Heigth'
+        
+    )
+
+    class Meta:
+        """Meta class."""
+
+        verbose_name = 'Altura Niño'
+        verbose_name_plural = 'Alturas de los Niño'
+
+    def __str__(self):
+        """Return name."""
+        return '{}|{}'.format(self.kid, self.height)
+
+

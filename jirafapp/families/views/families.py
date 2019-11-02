@@ -17,14 +17,17 @@ from jirafapp.users.permissions import IsAccountOwner
 
 # Models
 from jirafapp.families.models import (
-    Kid
+    Kid,
+    KidHeight
 )
 from jirafapp.users.models import User
 
 # Serializer
 from jirafapp.families.serializers import (
     KidModelSerializer,
-    CreateKidModelSerializer
+    CreateKidModelSerializer,
+    CreateKidHeightModelSerializer,
+    KidHeightModelSerializer
 )
 
 
@@ -36,7 +39,7 @@ class FamiliesViewSet(mixins.CreateModelMixin,
     permission_classes = [IsParent, IsAuthenticated]
 
     def dispatch(self, request, *args, **kwargs):
-        """Verify that the user exist"""
+        """Verify that the user exist."""
         username = kwargs['username']
         self.user = get_object_or_404(User, username=username)
         return super(FamiliesViewSet, self).dispatch(request, *args, **kwargs)
@@ -87,8 +90,48 @@ class KidsViewSet(mixins.RetrieveModelMixin,
     
     queryset = Kid.objects.all()
     lookup_field = 'username'
-    serializer_class = KidModelSerializer
     permission_classes = [IsParent]
+
+    def dispatch(self, request, *args, **kwargs):
+        """Verify that the user exist."""
+        username = kwargs['username']
+        self.kid = get_object_or_404(Kid, username=username)
+        return super().dispatch(request, *args, **kwargs)
+
+
+    def get_serializer_class(self):
+        """Return serializer based on action."""
+        if self.action == 'heigth':
+            return CreateKidHeightModelSerializer
+        return KidModelSerializer
+
+
+    @action(detail=True, methods=['post'])
+    def heigth(self, request, *args, **kwargs):
+        """Create  heigth for kid."""
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(
+            data=request.data,
+            context={'kid': self.kid, 'request': request}
+            )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        queryset = KidHeight.objects.filter(kid=self.kid)
+        data = {
+            'kid': KidModelSerializer(self.kid).data,
+            'data': KidHeightModelSerializer(queryset, many=True).data
+        }
+        return Response(data, status=status.HTTP_201_CREATED)
+
+    @action(detail=True, methods=['get'])
+    def history(self, request, *args, **kwargs):
+        """History data of height for users."""
+        queryset = KidHeight.objects.filter(kid=self.kid)
+        data = {
+            'kid': KidModelSerializer(self.kid).data,
+            'data': KidHeightModelSerializer(queryset, many=True).data
+        }
+        return Response(data, status=status.HTTP_201_CREATED)
 
 
 

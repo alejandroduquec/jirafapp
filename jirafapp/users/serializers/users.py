@@ -113,6 +113,8 @@ class UserSignUpSerializer(serializers.Serializer):
         # create username by email
         if 'username' not in data:
             data['username'] = username[0]
+            if User.objects.filter(username=username[0]).exists():
+                raise serializers.ValidationError("User with username {} already exists.".format(username[0]))
         # User does not needs a password only a public pin
         code = data.get('code')
         data['password'] = code
