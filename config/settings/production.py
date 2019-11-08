@@ -124,18 +124,18 @@ TEMPLATES[0]["OPTIONS"]["loaders"] = [  # noqa F405
     )
 ]
 
-# EMAIL
-# ------------------------------------------------------------------------------
-# https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
-DEFAULT_FROM_EMAIL = env(
-    "DJANGO_DEFAULT_FROM_EMAIL", default="jirafapp <noreply@jirafapp.com>"
-)
-# https://docs.djangoproject.com/en/dev/ref/settings/#server-email
-SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
-# https://docs.djangoproject.com/en/dev/ref/settings/#email-subject-prefix
-EMAIL_SUBJECT_PREFIX = env(
-    "DJANGO_EMAIL_SUBJECT_PREFIX", default="[jirafapp]"
-)
+# # EMAIL
+# # ------------------------------------------------------------------------------
+# # https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
+# DEFAULT_FROM_EMAIL = env(
+#     "DJANGO_DEFAULT_FROM_EMAIL", default="jirafapp <noreply@jirafapp.com>"
+# )
+# # https://docs.djangoproject.com/en/dev/ref/settings/#server-email
+# SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
+# # https://docs.djangoproject.com/en/dev/ref/settings/#email-subject-prefix
+# EMAIL_SUBJECT_PREFIX = env(
+#     "DJANGO_EMAIL_SUBJECT_PREFIX", default="[jirafapp]"
+# )
 
 # ADMIN
 # ------------------------------------------------------------------------------
@@ -145,7 +145,7 @@ ADMIN_URL = env("DJANGO_ADMIN_URL")
 # Anymail (Mailgun)
 # ------------------------------------------------------------------------------
 # https://anymail.readthedocs.io/en/stable/installation/#installing-anymail
-INSTALLED_APPS += ["anymail"]  # noqa F405
+#INSTALLED_APPS += ["anymail"]  # noqa F405
 
 # Collectfast
 # ------------------------------------------------------------------------------

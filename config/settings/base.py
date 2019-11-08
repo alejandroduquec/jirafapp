@@ -204,9 +204,7 @@ X_FRAME_OPTIONS = "DENY"
 
 # EMAIL
 
-EMAIL_BACKEND = env(
-    "DJANGO_EMAIL_BACKEND", default="sendgrid_backend.SendgridBackend"
-)
+EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
 
 SENDGRID_API_KEY = env("SENDGRID_API_KEY")
 SENDGRID_SANDBOX_MODE_IN_DEBUG = False
