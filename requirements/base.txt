@@ -24,3 +24,6 @@ packaging
 
 # Encypt
 cryptography==2.8 
+
+# Email
+django-sendgrid-v5

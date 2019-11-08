@@ -2,7 +2,10 @@
 
 # Django
 from django.contrib.auth import password_validation, authenticate
-from rest_framework.authtoken.models import Token
+from django.core.mail import BadHeaderError, send_mail
+
+# Loggin
+import logging
 
 # Django Rest Framework
 from rest_framework import serializers
@@ -20,6 +23,7 @@ from jirafapp.users.models import (
 from jirafapp.utils.utilities import send_email
 from cryptography.fernet import Fernet
 
+logger = logging.getLogger(__name__)
 
 class ProvinceModelSerializer(serializers.ModelSerializer):
     """User model serializer."""
@@ -150,11 +154,18 @@ class RememberCodeSerializer(serializers.Serializer):
         # Decrypt data
         f = Fernet(settings.KEY_ENCRYPT)
         bytes_code = f.decrypt(user.code.encode())
-        # send_email(user, 'Hi {}. Remember that your code is {}'.format(
-        #     user.first_name,
-        #     bytes_code.decode()
-        #     )
-        # )
+        try:
+            send_mail(
+                subject='[Jirafapp] Recovery Code',
+                message='Hi {}. Remember that your code is {}'.format(
+                    user.first_name,
+                    bytes_code.decode()),
+                from_email='noreply@jirafapp.com',
+                recipient_list=[user.email],
+                fail_silently=False,
+                )
+        except BadHeaderError as e:
+            logger.error("Error sent email: %s", e)
 
         return bytes_code.decode()
 

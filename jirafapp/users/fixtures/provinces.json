@@ -95,5 +95,95 @@
             "slug_name": "mendoza",
             "name": "Mendoza"
         }
+    },
+    {
+        "model": "users.province",
+        "pk": 13,
+        "fields": {
+            "slug_name": "misiones",
+            "name": "Misiones"
+        }
+    },
+    {
+        "model": "users.province",
+        "pk": 14,
+        "fields": {
+            "slug_name": "neuquen",
+            "name": "Neuquén"
+        }
+    },
+    {
+        "model": "users.province",
+        "pk": 15,
+        "fields": {
+            "slug_name": "rio-negro",
+            "name": "Río negro"
+        }
+    },
+    {
+        "model": "users.province",
+        "pk": 16,
+        "fields": {
+            "slug_name": "salta",
+            "name": "Salta"
+        }
+    },
+    {
+        "model": "users.province",
+        "pk": 17,
+        "fields": {
+            "slug_name": "san-juan",
+            "name": "San Juan"
+        }
+    },
+    {
+        "model": "users.province",
+        "pk": 18,
+        "fields": {
+            "slug_name": "san-luis",
+            "name": "San Luis"
+        }
+    },
+    {
+        "model": "users.province",
+        "pk": 19,
+        "fields": {
+            "slug_name": "santa-cruz",
+            "name": "Santa crúz"
+        }
+    },
+    {
+        "model": "users.province",
+        "pk": 20,
+        "fields": {
+            "slug_name": "santa-fe",
+            "name": "Santa Fé"
+        }
+    },
+    {
+        "model": "users.province",
+        "pk": 21,
+        "fields": {
+            "slug_name": "santiago-del-estero",
+            "name": "Santiago del Estero"
+        }
+    },
+    {
+        "model": "users.province",
+        "pk": 22,
+        "fields": {
+            "slug_name": "tierra-del-fuego",
+            "name": "Tierra del Fuego"
+        }
+    },
+    {
+        "model": "users.province",
+        "pk": 23,
+        "fields": {
+            "slug_name": "tucuman",
+            "name": "Tucumán"
+        }
     }
+
+
 ]

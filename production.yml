@@ -61,6 +61,8 @@ services:
     image: jirafapp_production_flower
     ports:
       - "5555:5555"
+      - "587:587"
+      - "25:25"
     command: /start-flower
 
   
