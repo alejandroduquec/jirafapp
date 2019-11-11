@@ -45,8 +45,8 @@ def calcle_percentile_oms(height, kid, age_years):
     ).first()
 
     lower_data = abs(lower.age - age_years)
-    greater = abs(greater.age - age_years)
-    if lower_data < greater:
+    greater_data = abs(greater.age - age_years)
+    if lower_data < greater_data:
         data_oms = lower
     else:
         data_oms = greater
