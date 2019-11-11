@@ -10,11 +10,16 @@ from rest_framework.validators import UniqueValidator
 # Model
 from jirafapp.families.models import (
     Kid,
-    KidHeight
+    KidHeight,
+    OmsMeasurement
 )
 
 # Utilities
-from jirafapp.utils.utilities import random_with_n_digits
+from jirafapp.utils.utilities import (
+    random_with_n_digits,
+    calcle_percentile_oms,
+    calcle_percentile_sap
+)
 
 INPUT_FORMATS = ['%d/%m/%Y', '%Y-%m-%d', '%Y/%m/%d']
 
@@ -88,17 +93,35 @@ class CreateKidHeightModelSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('The height must be in cms.')
         return data
 
+    def validate_date_height(self, data):
+        """Check height date."""
+        kid = self.context['kid']
+        if data < kid.birthdate:
+            raise serializers.ValidationError('measurement must be before the date of birth.')
+        return data
+
     def create(self, data):
         """Handle height creation."""
-        # Calcle time in months
-        now = timezone.localdate()
         kid = self.context['kid']
-        date_height = (now - kid.birthdate).days /30.4
+
+        # Date measurement
+        date_height = data.get('date_height')
+        height = data.get('height')
+
+        # Age in months
+        age_height = (date_height - kid.birthdate).days / 30.4
+
+        # Age in years
+        age_years = int(age_height)/12
+
+        z_oms = calcle_percentile_oms(height, kid, age_years)
+        z_sap = calcle_percentile_sap(height, kid, age_years)
+
         # Data complete
-        data['age_height'] = round(date_height, 2)
+        data['age_height'] = round(age_height, 2)
         data['kid'] = kid
+        data['height'] = int(height)
+        data['percentile_oms'] = z_oms
+        data['percentile_sap'] = z_sap
         kid_height = KidHeight.objects.create(**data)
         return kid_height
-
-
-

@@ -22,7 +22,7 @@ class Kid(JirafaModel):
     parent = models.ForeignKey('users.user', on_delete=models.CASCADE)
 
     gender = models.CharField(
-        'Genero',
+        'Gender',
         max_length=2,
         choices=GENDER_CHOICES,
     )
@@ -71,23 +71,27 @@ class KidHeight(JirafaModel):
     age_height = models.CharField(
         'Age height',
         max_length=10,
+        help_text='Age in months at measurement moment.'
     )
 
-    percentile = models.CharField(
-        'Percentile',
+    percentile_oms = models.CharField(
+        'Percentile Oms',
+        max_length=10,
+    )
+    percentile_sap = models.CharField(
+        'Percentile Sap',
         max_length=10,
     )
 
     date_height = models.DateField(
         'Date Heigth'
-        
     )
 
     class Meta:
         """Meta class."""
 
         verbose_name = 'Altura Niño'
-        verbose_name_plural = 'Alturas de los Niño'
+        verbose_name_plural = 'Alturas de los Niños'
 
     def __str__(self):
         """Return name."""
