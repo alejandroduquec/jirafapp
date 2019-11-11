@@ -118,7 +118,7 @@ class CreateKidHeightModelSerializer(serializers.ModelSerializer):
         z_sap = calcle_percentile_sap(height, kid, age_years)
 
         # Data complete
-        data['age_height'] = round(age_height, 2)
+        data['age_height'] = int(age_height)
         data['kid'] = kid
         data['height'] = int(height)
         data['percentile_oms'] = z_oms
