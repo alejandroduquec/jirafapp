@@ -70,8 +70,8 @@ def calcle_percentile_sap(height, kid, age_years):
     ).first()
 
     lower_data = abs(lower.age - age_years)
-    greater = abs(greater.age - age_years)
-    if lower_data < greater:
+    greater_data = abs(greater.age - age_years)
+    if lower_data < greater_data:
         data_sap = lower
     else:
         data_sap = greater
