@@ -87,7 +87,7 @@ class CreateKidModelSerializer(serializers.ModelSerializer):
             random_with_n_digits(5)
         )
         # Ensure premature date when kid is premaute
-        if data['is_premature'] and 'premature_date' not in data:
+        if data.get('is_premature', False) and 'premature_date' not in data:
             raise serializers.ValidationError({'premature_date': 'This field is required'})
         return data
 
