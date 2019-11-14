@@ -102,7 +102,6 @@ class UserViewSet(mixins.RetrieveModelMixin,
         serializer.is_valid(raise_exception=True)
         code = serializer.save()
         data = {
-            'code': code,
-            'response': 'This is a temporal response, it will be an email.'
+            'response': 'Code sent.'
         }
         return Response(data, status=status.HTTP_200_OK)

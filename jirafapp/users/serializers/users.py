@@ -156,8 +156,8 @@ class RememberCodeSerializer(serializers.Serializer):
         bytes_code = f.decrypt(user.code.encode())
         try:
             send_mail(
-                subject='[Jirafapp] Recovery Code',
-                message='Hi {}. Remember that your code is {}'.format(
+                subject='Jirafa App - Tu pin de acceso',
+                message='Hola {}, Te recordamos tu pin de acceso a Jirafa App. \n Pin de acceso:{}'.format(
                     user.first_name,
                     bytes_code.decode()),
                 from_email='noreply@jirafapp.com',

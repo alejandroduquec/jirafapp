@@ -4,6 +4,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from rest_framework.validators import UniqueValidator
+from django.utils import timezone
 
 # Utils
 from jirafapp.utils.models import JirafaModel
@@ -41,6 +42,11 @@ class Kid(JirafaModel):
         'Birthdate'
     )
 
+    is_premature = models.BooleanField(
+        'Is premature',
+        default=False
+    )
+
     premature_date = models.DateField(
         'Premature date estimated',
         null=True,
@@ -56,6 +62,12 @@ class Kid(JirafaModel):
     def __str__(self):
         """Return name."""
         return self.name
+
+    @property
+    def age_in_months(self):
+        """Check user has active profile."""
+        age = (timezone.localdate() - self.birthdate).days / 30.4
+        return int(age)
 
 
 class KidHeight(JirafaModel):

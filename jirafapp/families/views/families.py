@@ -27,7 +27,8 @@ from jirafapp.families.serializers import (
     KidModelSerializer,
     CreateKidModelSerializer,
     CreateKidHeightModelSerializer,
-    KidHeightModelSerializer
+    KidHeightModelSerializer,
+    UpdateKidModelSerializer
 )
 
 
@@ -74,7 +75,6 @@ class FamiliesViewSet(mixins.CreateModelMixin,
             return Response(data, status=status.HTTP_403_FORBIDDEN)
 
         queryset = self.filter_queryset(self.get_queryset())
-
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -85,6 +85,7 @@ class FamiliesViewSet(mixins.CreateModelMixin,
 
 
 class KidsViewSet(mixins.RetrieveModelMixin,
+                  mixins.UpdateModelMixin,
                   viewsets.GenericViewSet):
     """Kids Viewset."""
     
@@ -98,14 +99,31 @@ class KidsViewSet(mixins.RetrieveModelMixin,
         self.kid = get_object_or_404(Kid, username=username)
         return super().dispatch(request, *args, **kwargs)
 
-
     def get_serializer_class(self):
         """Return serializer based on action."""
         if self.action == 'heigth':
             return CreateKidHeightModelSerializer
+        if self.action in ['update', 'partial_update']:
+            return UpdateKidModelSerializer
         return KidModelSerializer
 
+    def update(self, request, *args, **kwargs):
+        """Handle update method.
 
+        Enable only patch method, disable put.
+        """
+        partial = kwargs.pop('partial', False)
+        if not partial:
+            data = {"detail": "Method \"PUT\" not allowed."}
+            return Response(data, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        kid = serializer.save()
+        data = KidModelSerializer(kid).data
+        return Response(data, status=status.HTTP_200_OK)
+    
     @action(detail=True, methods=['post'])
     def heigth(self, request, *args, **kwargs):
         """Create  heigth for kid."""

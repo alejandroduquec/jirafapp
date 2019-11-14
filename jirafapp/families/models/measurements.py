@@ -2,8 +2,6 @@
 
 # Django
 from django.db import models
-from django.contrib.auth.models import AbstractUser
-from rest_framework.validators import UniqueValidator
 
 # Models
 from jirafapp.families.models import GENDER_CHOICES
@@ -61,3 +59,4 @@ class SAPMeasurement(models.Model):
     def __str__(self):
         """Return data."""
         return '{}|{}'.format(self.gender, self.age)
+

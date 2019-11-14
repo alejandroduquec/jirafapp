@@ -3,6 +3,7 @@
 # Django
 from django.contrib.auth import password_validation, authenticate
 from django.utils import timezone
+
 # Django Rest Framework
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
@@ -31,7 +32,21 @@ class KidModelSerializer(serializers.ModelSerializer):
         """Meta serializer."""
 
         model = Kid
-        exclude = ('id', 'created', 'modified', 'parent')
+        fields = ['gender', 'username', 'name',
+                  'birthdate', 'age_in_months',
+                  'premature_date', 'is_premature']
+
+
+class UpdateKidModelSerializer(serializers.ModelSerializer):
+    """Update Kid model serializer."""
+
+    birthdate = serializers.DateField(format='%Y-%m-%d', input_formats=INPUT_FORMATS)
+
+    class Meta:
+        """Meta serializer."""
+
+        model = Kid
+        fields = ['birthdate', 'name']
 
 
 class KidHeightModelSerializer(serializers.ModelSerializer):
@@ -57,6 +72,13 @@ class CreateKidModelSerializer(serializers.ModelSerializer):
         model = Kid
         exclude = ('created', 'modified', 'username')
 
+    def validate_birthdate(self, data):
+        """Ensure under than 19 years old."""
+        age = (timezone.localdate() - data).days / 365
+        if age >= 19:
+            raise serializers.ValidationError('Kid must be under 19 years.')
+        return data
+
     def validate(self, data):
         """Create custom username."""
         data['username'] = 'kid_{}_{}{}'.format(
@@ -64,6 +86,9 @@ class CreateKidModelSerializer(serializers.ModelSerializer):
             data['gender'][0].lower(),
             random_with_n_digits(5)
         )
+        # Ensure premature date when kid is premaute
+        if data['is_premature'] and 'premature_date' not in data:
+            raise serializers.ValidationError({'premature_date': 'This field is required'})
         return data
 
     def create(self, data):

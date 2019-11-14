@@ -17,7 +17,7 @@ def send_email(user, message):
     """Send email to specific user."""
     if user.email:
         status = send_mail(
-            'Recuperar pin.',
+            'Jirafa App - Tu pin de acceso.',
             message,
             'tech@jirafapp.com',
             [user.email],
