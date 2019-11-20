@@ -28,7 +28,8 @@ from jirafapp.families.serializers import (
     CreateKidModelSerializer,
     CreateKidHeightModelSerializer,
     KidHeightModelSerializer,
-    UpdateKidModelSerializer
+    UpdateKidModelSerializer,
+    UpdateKidHeightModelSerializer
 )
 
 
@@ -86,6 +87,7 @@ class FamiliesViewSet(mixins.CreateModelMixin,
 
 class KidsViewSet(mixins.RetrieveModelMixin,
                   mixins.UpdateModelMixin,
+                  mixins.DestroyModelMixin,
                   viewsets.GenericViewSet):
     """Kids Viewset."""
     
@@ -105,7 +107,15 @@ class KidsViewSet(mixins.RetrieveModelMixin,
             return CreateKidHeightModelSerializer
         if self.action in ['update', 'partial_update']:
             return UpdateKidModelSerializer
+        if self.action == 'manage_heigth':
+            return UpdateKidHeightModelSerializer
         return KidModelSerializer
+    
+    def get_serializer_context(self):
+        """Add kit to serializers context."""
+        context = super().get_serializer_context()
+        context['kid'] = self.kid
+        return context
 
     def update(self, request, *args, **kwargs):
         """Handle update method.
@@ -140,6 +150,31 @@ class KidsViewSet(mixins.RetrieveModelMixin,
             'data': KidHeightModelSerializer(queryset, many=True).data
         }
         return Response(data, status=status.HTTP_201_CREATED)
+    
+    @action(detail=True, methods=['DELETE', 'PATCH'], url_path='heigth/(?P<pk>\d+)')
+    def manage_heigth(self, request, *args, **kwargs):
+        """Create  heigth for kid."""
+        try:
+            height = KidHeight.objects.get(pk=kwargs['pk'])
+        except KidHeight.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        if request.method == 'DELETE':
+            height.delete()
+            data = {'response': 'Heigth deleted.'}
+            status_result = status.HTTP_204_NO_CONTENT
+        else:
+            # Patch
+            instance = height
+            serializer = self.get_serializer(
+                instance, data=request.data,
+                partial=True
+                )
+            serializer.is_valid(raise_exception=True)
+            height = serializer.save()
+            data = KidHeightModelSerializer(height).data
+            status_result = status.HTTP_200_OK
+        return Response(data, status_result)
 
     @action(detail=True, methods=['get'])
     def history(self, request, *args, **kwargs):

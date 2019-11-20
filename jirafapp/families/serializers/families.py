@@ -34,7 +34,7 @@ class KidModelSerializer(serializers.ModelSerializer):
         model = Kid
         fields = ['gender', 'username', 'name',
                   'birthdate', 'age_in_months',
-                  'premature_date', 'is_premature']
+                  'premature_weaks', 'is_premature']
 
 
 class UpdateKidModelSerializer(serializers.ModelSerializer):
@@ -46,7 +46,7 @@ class UpdateKidModelSerializer(serializers.ModelSerializer):
         """Meta serializer."""
 
         model = Kid
-        fields = ['birthdate', 'name']
+        fields = ['birthdate', 'name', 'gender']
 
 
 class KidHeightModelSerializer(serializers.ModelSerializer):
@@ -56,7 +56,7 @@ class KidHeightModelSerializer(serializers.ModelSerializer):
         """Meta serializer."""
 
         model = KidHeight
-        exclude = ('id', 'created', 'modified', 'kid')
+        exclude = ('created', 'modified', 'kid')
 
 
 class CreateKidModelSerializer(serializers.ModelSerializer):
@@ -64,7 +64,6 @@ class CreateKidModelSerializer(serializers.ModelSerializer):
 
     parent = serializers.HiddenField(default=serializers.CurrentUserDefault())
     birthdate = serializers.DateField(format='%Y-%m-%d', input_formats=INPUT_FORMATS)
-    premature_date = serializers.DateField(format='%Y-%m-%d', input_formats=INPUT_FORMATS, required=False)
 
     class Meta:
         """Meta class."""
@@ -87,8 +86,8 @@ class CreateKidModelSerializer(serializers.ModelSerializer):
             random_with_n_digits(5)
         )
         # Ensure premature date when kid is premaute
-        if data.get('is_premature', False) and 'premature_date' not in data:
-            raise serializers.ValidationError({'premature_date': 'This field is required'})
+        if data.get('is_premature', False) and 'premature_weaks' not in data:
+            raise serializers.ValidationError({'premature_weaks': 'This field is required'})
         return data
 
     def create(self, data):
@@ -150,3 +149,38 @@ class CreateKidHeightModelSerializer(serializers.ModelSerializer):
         data['percentile_sap'] = z_sap
         kid_height = KidHeight.objects.create(**data)
         return kid_height
+
+
+class UpdateKidHeightModelSerializer(serializers.ModelSerializer):
+    """Kid model serializer."""
+
+    date_height = serializers.DateField(format='%Y-%m-%d', input_formats=INPUT_FORMATS)
+
+    class Meta:
+        """Meta serializer."""
+
+        model = KidHeight
+        fields = ('height', 'date_height')
+    
+    def validate_height(self, data):
+        """Check height value."""
+        data = float(data)
+        if data < 20:
+            raise serializers.ValidationError('The height must be in cms.')
+        return data
+
+    def validate_date_height(self, data):
+        """Check height date."""
+        kid = self.context['kid']
+        if data < kid.birthdate:
+            raise serializers.ValidationError('measurement must be before the date of birth.')
+        return data
+    
+    def update(self, instance, validated_data):
+        if 'date_height' in validated_data:
+            # calcle new age_height
+            validated_data['age_height'] = int(
+                (validated_data['date_height'] - instance.kid.birthdate).days / 30.4)
+        return super().update(instance, validated_data)
+
+

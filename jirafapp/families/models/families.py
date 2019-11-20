@@ -47,10 +47,11 @@ class Kid(JirafaModel):
         default=False
     )
 
-    premature_date = models.DateField(
-        'Premature date estimated',
+    premature_weaks = models.CharField(
+        'Premature weaks',
         null=True,
-        blank=True
+        blank=True,
+        max_length=10,
     )
 
     class Meta:
@@ -66,6 +67,7 @@ class Kid(JirafaModel):
     @property
     def age_in_months(self):
         """Check user has active profile."""
+        # TODO: check premature data
         age = (timezone.localdate() - self.birthdate).days / 30.4
         return int(age)
 

@@ -22,6 +22,7 @@ router.register(
     basename='kids'
 )
 
+
 urlpatterns = [
     path('', include(router.urls))
 ]
