@@ -47,7 +47,7 @@ class Kid(JirafaModel):
         default=False
     )
 
-    premature_weaks = models.CharField(
+    premature_weeks = models.CharField(
         'Premature weaks',
         null=True,
         blank=True,

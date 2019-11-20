@@ -34,7 +34,7 @@ class KidModelSerializer(serializers.ModelSerializer):
         model = Kid
         fields = ['gender', 'username', 'name',
                   'birthdate', 'age_in_months',
-                  'premature_weaks', 'is_premature']
+                  'premature_weeks', 'is_premature']
 
 
 class UpdateKidModelSerializer(serializers.ModelSerializer):
@@ -86,8 +86,8 @@ class CreateKidModelSerializer(serializers.ModelSerializer):
             random_with_n_digits(5)
         )
         # Ensure premature date when kid is premaute
-        if data.get('is_premature', False) and 'premature_weaks' not in data:
-            raise serializers.ValidationError({'premature_weaks': 'This field is required'})
+        if data.get('is_premature', False) and 'premature_weeks' not in data:
+            raise serializers.ValidationError({'premature_weeks': 'This field is required'})
         return data
 
     def create(self, data):
