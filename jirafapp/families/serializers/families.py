@@ -48,6 +48,20 @@ class UpdateKidModelSerializer(serializers.ModelSerializer):
         model = Kid
         fields = ['birthdate', 'name', 'gender']
 
+    def update(self, instance, validated_data):
+        """Handle update kid."""
+        if 'birthdate' in validated_data:
+            new_birthdate = validated_data.get('birthdate')
+            # Get heigh measurements
+            measurements = KidHeight.objects.filter(kid=instance)
+
+            if measurements:
+                for data in measurements:
+                    age_height = (data.date_height - new_birthdate).days / 30.4
+                    data.age_height = round(age_height, 1)
+                    data.save()
+        return super().update(instance, validated_data)
+
 
 class KidHeightModelSerializer(serializers.ModelSerializer):
     """Kid model serializer."""
@@ -142,7 +156,7 @@ class CreateKidHeightModelSerializer(serializers.ModelSerializer):
         z_sap = calcle_percentile_sap(height, kid, age_years)
 
         # Data complete
-        data['age_height'] = int(age_height)
+        data['age_height'] = round(age_height, 1)
         data['kid'] = kid
         data['height'] = int(height)
         data['percentile_oms'] = z_oms
