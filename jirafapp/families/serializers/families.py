@@ -46,7 +46,7 @@ class UpdateKidModelSerializer(serializers.ModelSerializer):
         """Meta serializer."""
 
         model = Kid
-        fields = ['birthdate', 'name', 'gender']
+        fields = ['birthdate', 'name', 'gender', 'premature_weeks']
 
     def update(self, instance, validated_data):
         """Handle update kid."""

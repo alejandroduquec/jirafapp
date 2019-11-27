@@ -144,7 +144,7 @@ class KidsViewSet(mixins.RetrieveModelMixin,
             )
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        queryset = KidHeight.objects.filter(kid=self.kid)
+        queryset = KidHeight.objects.filter(kid=self.kid).order_by('date_height')
         data = {
             'kid': KidModelSerializer(self.kid).data,
             'data': KidHeightModelSerializer(queryset, many=True).data
@@ -155,7 +155,7 @@ class KidsViewSet(mixins.RetrieveModelMixin,
     def manage_heigth(self, request, *args, **kwargs):
         """Create  heigth for kid."""
         try:
-            height = KidHeight.objects.get(pk=kwargs['pk'])
+            height = KidHeight.objects.get(pk=kwargs['pk']).order_by('date_height')
         except KidHeight.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -179,7 +179,7 @@ class KidsViewSet(mixins.RetrieveModelMixin,
     @action(detail=True, methods=['get'])
     def history(self, request, *args, **kwargs):
         """History data of height for users."""
-        queryset = KidHeight.objects.filter(kid=self.kid)
+        queryset = KidHeight.objects.filter(kid=self.kid).order_by('date_height')
         data = {
             'kid': KidModelSerializer(self.kid).data,
             'data': KidHeightModelSerializer(queryset, many=True).data
