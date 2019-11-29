@@ -47,6 +47,20 @@ class UpdateKidModelSerializer(serializers.ModelSerializer):
 
         model = Kid
         fields = ['birthdate', 'name', 'gender', 'premature_weeks']
+    
+    def validate_birthdate(self, data):
+        """Ensure that birthdate is under measurements dates."""
+        age = (timezone.localdate() - data).days / 365
+        if age >= 19:
+            raise serializers.ValidationError('Kid must be under 19 years.')
+        
+        user = self.context.get('kid')
+        measurements = KidHeight.objects.filter(kid=user)
+        if measurements:
+                for measurement in measurements:
+                    if measurement.date_height < data:
+                        raise serializers.ValidationError('Can not update birthdate due to measurement date.')
+        return data
 
     def update(self, instance, validated_data):
         """Handle update kid."""
