@@ -155,7 +155,7 @@ class KidsViewSet(mixins.RetrieveModelMixin,
     def manage_heigth(self, request, *args, **kwargs):
         """Create  heigth for kid."""
         try:
-            height = KidHeight.objects.get(pk=kwargs['pk']).order_by('date_height')
+            height = KidHeight.objects.get(pk=kwargs['pk'])
         except KidHeight.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
