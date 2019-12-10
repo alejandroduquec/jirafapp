@@ -140,6 +140,7 @@ class CreateKidHeightModelSerializer(serializers.ModelSerializer):
 
     def validate_height(self, data):
         """Check height value."""
+        kid = self.context.get('kid')
         data = float(data)
         if data < 20:
             raise serializers.ValidationError('The height must be in cms.')
@@ -150,6 +151,8 @@ class CreateKidHeightModelSerializer(serializers.ModelSerializer):
         kid = self.context['kid']
         if data < kid.birthdate:
             raise serializers.ValidationError('measurement must be before the date of birth.')
+        if KidHeight.objects.filter(kid=kid, date_height=data).exists():
+            raise serializers.ValidationError('Another height is already registered for this kid.')
         return data
 
     def create(self, data):
@@ -202,6 +205,8 @@ class UpdateKidHeightModelSerializer(serializers.ModelSerializer):
         kid = self.context['kid']
         if data < kid.birthdate:
             raise serializers.ValidationError('measurement must be before the date of birth.')
+        if KidHeight.objects.filter(kid=kid, date_height=data).exclude(id=self.instance.id).exists():
+            raise serializers.ValidationError('Another height is already registered for this kid.')
         return data
     
     def update(self, instance, validated_data):
