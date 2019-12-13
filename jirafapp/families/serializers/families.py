@@ -168,9 +168,12 @@ class CreateKidHeightModelSerializer(serializers.ModelSerializer):
 
         # Age in years
         age_years = int(age_height)/12
-
-        z_oms = calcle_percentile_oms(height, kid, age_years)
-        z_sap = calcle_percentile_sap(height, kid, age_years)
+        try:
+            z_oms = calcle_percentile_oms(height, kid, age_years)
+            z_sap = calcle_percentile_sap(height, kid, age_years)
+        except:
+            z_oms = 0
+            z_sap = 0
 
         # Data complete
         data['age_height'] = round(age_height, 1)
@@ -208,7 +211,7 @@ class UpdateKidHeightModelSerializer(serializers.ModelSerializer):
         if KidHeight.objects.filter(kid=kid, date_height=data).exclude(id=self.instance.id).exists():
             raise serializers.ValidationError('Another height is already registered for this kid.')
         return data
-    
+
     def update(self, instance, validated_data):
         if 'date_height' in validated_data:
             # calcle new age_height

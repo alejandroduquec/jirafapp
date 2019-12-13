@@ -184,7 +184,7 @@ class KidsViewSet(mixins.RetrieveModelMixin,
             'kid': KidModelSerializer(self.kid).data,
             'data': KidHeightModelSerializer(queryset, many=True).data
         }
-        return Response(data, status=status.HTTP_201_CREATED)
+        return Response(data, status=status.HTTP_200_OK)
 
 
 
