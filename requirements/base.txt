@@ -21,9 +21,8 @@ djangorestframework==3.10.3  # https://github.com/encode/django-rest-framework
 coreapi==2.3.3  # https://github.com/core-api/python-client
 drf-yasg
 packaging
+django-smtp-ssl
 
 # Encypt
 cryptography==2.8 
 
-# Email
-django-sendgrid-v5

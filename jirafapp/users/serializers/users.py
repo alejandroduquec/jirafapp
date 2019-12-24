@@ -161,7 +161,7 @@ class RememberCodeSerializer(serializers.Serializer):
                 message='Hola {}, Te recordamos tu pin de acceso a Jirafa App. \n Pin de acceso:{}'.format(
                     user.first_name,
                     bytes_code.decode()),
-                from_email='noreply@jirafapp.com',
+                from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[user.email],
                 fail_silently=False,
                 )
