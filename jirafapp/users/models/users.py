@@ -54,6 +54,8 @@ class User(JirafaModel, AbstractUser):
     province = models.ForeignKey(
         'users.Province',
         on_delete=models.CASCADE,
+        null=True,
+        blank=True
     )
 
     USERNAME_FIELD = 'email'
